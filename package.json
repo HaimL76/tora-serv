@@ -1,0 +1,24 @@
+{
+  "name": "tora-server",
+  "version": "1.0.0",
+  "description": "tora app server",
+  "main": "app.js",
+  "scripts": {
+    "test": "tora-test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "tora-app"
+  },
+  "keywords": [
+    "tora",
+    "app",
+    "server"
+  ],
+  "author": "HaimL",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
