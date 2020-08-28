@@ -13,9 +13,28 @@ app.get('/', function (req, res) {
 });
 
 app.get('/dowork',function(req, res){
+	var mysql = require('mysql');
+
+	var con = mysql.createConnection({
+		 host: "localhost",
+		 port: 3307,
+		 user: "root",
+		 password: "root",
+		 database: "Person"
+	});
+
+	con.connect(function(err) {
+		 if (err) throw err;
+			 con.query("SELECT * FROM Person", function (err, result, fields) {
+
+			 if (err) throw err;
+				 console.log(result);
+			 });
+		});
+
 	var json = {
-		name: "sldkjclsk",
-		phone: "lkpoelrgkler"
+		name: "Name Example",
+		phone: "0525888666"
 	};
 
 	console.log('before ' + JSON.stringify(json));
