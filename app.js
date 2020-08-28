@@ -25,21 +25,16 @@ app.get('/dowork',function(req, res){
 
 	con.connect(function(err) {
 		 if (err) throw err;
-			 con.query("SELECT * FROM Person", function (err, result, fields) {
 
-			 if (err) throw err;
-				 console.log(result);
-			 });
+		 con.query("SELECT * FROM Person", function (err, result, fields) {
+
+		if (err) throw err;
+			console.log(result);
+
+			Object.keys(result).forEach(function(key) {
+				var row = result[key];
+				console.log(row.name)
+			  });
 		});
-
-	var json = {
-		name: "Name Example",
-		phone: "0525888666"
-	};
-
-	console.log('before ' + JSON.stringify(json));
-
-	res.send(json);
-
-	console.log('after ' + JSON.stringify(json));
+	});
 });
