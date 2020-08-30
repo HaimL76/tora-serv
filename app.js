@@ -12,7 +12,7 @@ app.get('/', function (req, res) {
   res.send('Hello World!');
 });
 
-app.get('/dowork',function(req, res) {
+app.get('/people',function(req, res) {
 	var mysql = require('mysql');
 
 	var con = mysql.createConnection({
@@ -32,4 +32,34 @@ app.get('/dowork',function(req, res) {
 			res.send(results);
 		});
 	});
+});
+
+app.get('/person/:id',function(req, res) {
+	const id = 'id';
+
+	var mysql = require('mysql');
+
+	var con = mysql.createConnection({
+		 host: "localhost",
+		 port: 3307,
+		 user: "root",
+		 password: "root",
+		 database: "Person"
+	});
+
+	if (req.params && id in req.params) {
+		var myId = req.params[id];
+
+		if (myId) {
+			con.connect(function(err) {
+				if (err) throw err;
+
+				con.query("SELECT * FROM Person where id = " + myId.toString(), function (err, results, fields) {
+					if (err) throw err;
+
+					res.send(results);
+				});
+			});
+		}
+	}
 });
