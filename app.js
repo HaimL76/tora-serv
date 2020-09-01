@@ -26,7 +26,11 @@ app.get('/people',function(req, res) {
 	con.connect(function(err) {
 		if (err) throw err;
 
-		con.query("SELECT * FROM Person", function (err, results, fields) {
+		sql = "SELECT * FROM Person";
+
+		console.log(sql);
+
+		con.query(sql, function (err, results, fields) {
 			if (err) throw err;
 
 			res.send(results);
@@ -54,7 +58,13 @@ app.get('/person/:id',function(req, res) {
 			con.connect(function(err) {
 				if (err) throw err;
 
-				con.query("SELECT * FROM Person where id = " + myId.toString(), function (err, results, fields) {
+				sql = "select * from person left outer join person_book on person.id = person_book.person_id ";
+				sql += " left outer join book on book.id = person_book.book_id ";
+				sql += " where person.id = " + myId.toString();
+
+				console.log(sql);
+
+				con.query(sql, function (err, results, fields) {
 					if (err) throw err;
 
 					res.send(results);
