@@ -59,7 +59,7 @@ app.get('/person/:id',function(req, res) {
 				if (err) throw err;
 
 				sql = "select * from person left outer join person_book on person.id = person_book.person_id ";
-				sql += " left outer join book on book.id = person_book.book_id ";
+				sql += " inner join book on book.id = person_book.book_id ";
 				sql += " where person.id = " + myId.toString();
 
 				console.log(sql);
