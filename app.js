@@ -4,15 +4,21 @@ var app = express();
 
 app.use(cors())
 
-app.listen(3000, function () {
+var bodyParser = require('body-parser')
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+    extended: true
+}));
+
+app.listen(3000, () => {
   console.log('Example app listening on port 3000!');
 });
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.get('/people',function(req, res) {
+app.get('/people', (req, res) => {
 	var mysql = require('mysql');
 
 	var con = mysql.createConnection({
@@ -23,14 +29,14 @@ app.get('/people',function(req, res) {
 		 database: "Person"
 	});
 
-	con.connect(function(err) {
+	con.connect((err) => {
 		if (err) throw err;
 
 		sql = "SELECT * FROM Person";
 
 		console.log(sql);
 
-		con.query(sql, function (err, results, fields) {
+		con.query(sql, (err, results, fields) => {
 			if (err) throw err;
 
 			res.send(results);
@@ -38,7 +44,7 @@ app.get('/people',function(req, res) {
 	});
 });
 
-app.get('/person/:id',function(req, res) {
+app.get('/person/:id', (req, res) => {
 	const id = 'id';
 
 	var mysql = require('mysql');
@@ -55,7 +61,7 @@ app.get('/person/:id',function(req, res) {
 		var myId = req.params[id];
 
 		if (myId) {
-			con.connect(function(err) {
+			con.connect((err) => {
 				if (err) throw err;
 
 				sql = "select * from person left outer join person_book on person.id = person_book.person_id ";
@@ -71,5 +77,13 @@ app.get('/person/:id',function(req, res) {
 				});
 			});
 		}
+	}
+});
+
+app.post('/person/:id', (req, res) => {
+	const body = 'body';
+
+	if (req && body in req) {
+		
 	}
 });
