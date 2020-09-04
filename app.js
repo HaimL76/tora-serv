@@ -44,6 +44,8 @@ app.get('/people', (req, res) => {
 
 			res.send(results);
 		});
+
+		con.end();
 	});
 });
 
@@ -63,6 +65,8 @@ app.get('/books', (req, res) => {
 			if (err) throw err;
 
 			res.send(results);
+
+			con.end();
 		});
 	});
 });
@@ -93,6 +97,8 @@ app.get('/person/:id', (req, res) => {
 
 					res.send(results);
 				});
+
+				con.end();
 			});
 		}
 	}
@@ -130,6 +136,8 @@ app.post('/person/:id', (req, res) => {
 						else
 							res.send(results);
 					});
+
+					con.end();
 				});
 			}
 		}
