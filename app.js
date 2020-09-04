@@ -35,7 +35,7 @@ app.get('/people', (req, res) => {
 	con.connect((err) => {
 		if (err) throw err;
 
-		sql = "SELECT * FROM Person order by last asc, first asc";
+		sql = "select * from person order by last asc, first asc";
 
 		console.log(sql);
 
@@ -46,6 +46,27 @@ app.get('/people', (req, res) => {
 		});
 	});
 });
+
+app.get('/books', (req, res) => {
+	var mysql = require('mysql');
+
+	var con = mysql.createConnection(connJson);
+
+	con.connect((err) => {
+		if (err) throw err;
+
+		sql = "select * from book order by title asc";
+
+		console.log(sql);
+
+		con.query(sql, (err, results, fields) => {
+			if (err) throw err;
+
+			res.send(results);
+		});
+	});
+});
+
 
 app.get('/person/:id', (req, res) => {
 	const id = 'id';
@@ -98,14 +119,15 @@ app.post('/person/:id', (req, res) => {
 				con.connect((err) => {
 					if (err) throw err;
 			
-					sql = "insert into person_book (person_id, book_id) ";
-					sql += " values (" + person_id.toString() + ", " + book_id.toString() + ")";
+					sql = "insert into person_book (person_id, book_id, quantity) ";
+					sql += " values (" + person_id.toString() + ", " + book_id.toString() + ", 0)";
 					console.log(sql);
 			
 					con.query(sql, (err, results, fields) => {
-						if (err) throw err;
-			
-						res.send(results);
+						if (err) //throw err;
+							console.error(err);
+						else
+							res.send(results);
 					});
 				});
 			}
