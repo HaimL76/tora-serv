@@ -82,8 +82,23 @@ app.get('/person/:id', (req, res) => {
 
 app.post('/person/:id', (req, res) => {
 	const body = 'body';
+	const id = 'id';
+	const book = 'book';
 
-	if (req && body in req) {
+	if (req && body in req && req.params && id in req.params) {
+		var person_id = req.params[id];
+
+		var req_body = req[body];
 		
+		if (req_body && book in req_body && person_id > 0) {
+			var book_id = req_body[book];
+			
+			if (book_id > 0) {
+				sql = "insert into person_book (person_id, book_id) ";
+				sql += " values (" + person_id.toString() + ", " + book_id.toString() + ")";
+
+				console.log(sql);
+			}
+		}
 	}
 });
