@@ -32,7 +32,7 @@ app.get('/people', (req, res) => {
 	con.connect((err) => {
 		if (err) throw err;
 
-		sql = "SELECT * FROM Person";
+		sql = "SELECT * FROM Person order by last asc, first asc";
 
 		console.log(sql);
 
