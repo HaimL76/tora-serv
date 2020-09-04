@@ -10,6 +10,15 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
 }));
 
+var connJson = {
+	host: "localhost",
+	port: 3307,
+	user: "root",
+	password: "root",
+	database: "Person"
+};
+
+
 app.listen(3000, () => {
   console.log('Example app listening on port 3000!');
 });
@@ -21,13 +30,7 @@ app.get('/', (req, res) => {
 app.get('/people', (req, res) => {
 	var mysql = require('mysql');
 
-	var con = mysql.createConnection({
-		 host: "localhost",
-		 port: 3307,
-		 user: "root",
-		 password: "root",
-		 database: "Person"
-	});
+	var con = mysql.createConnection(connJson);
 
 	con.connect((err) => {
 		if (err) throw err;
@@ -49,13 +52,7 @@ app.get('/person/:id', (req, res) => {
 
 	var mysql = require('mysql');
 
-	var con = mysql.createConnection({
-		 host: "localhost",
-		 port: 3307,
-		 user: "root",
-		 password: "root",
-		 database: "Person"
-	});
+	var con = mysql.createConnection(connJson);
 
 	if (req.params && id in req.params) {
 		var myId = req.params[id];
@@ -85,6 +82,10 @@ app.post('/person/:id', (req, res) => {
 	const id = 'id';
 	const book = 'book';
 
+	var mysql = require('mysql');
+	
+	var con = mysql.createConnection(connJson);
+
 	if (req && body in req && req.params && id in req.params) {
 		var person_id = req.params[id];
 
@@ -94,10 +95,19 @@ app.post('/person/:id', (req, res) => {
 			var book_id = req_body[book];
 			
 			if (book_id > 0) {
-				sql = "insert into person_book (person_id, book_id) ";
-				sql += " values (" + person_id.toString() + ", " + book_id.toString() + ")";
-
-				console.log(sql);
+				con.connect((err) => {
+					if (err) throw err;
+			
+					sql = "insert into person_book (person_id, book_id) ";
+					sql += " values (" + person_id.toString() + ", " + book_id.toString() + ")";
+					console.log(sql);
+			
+					con.query(sql, (err, results, fields) => {
+						if (err) throw err;
+			
+						res.send(results);
+					});
+				});
 			}
 		}
 	}
