@@ -120,7 +120,8 @@ app.post('/person/:id', (req, res) => {
 					if (err) throw err;
 			
 					sql = "insert into person_book (person_id, book_id, quantity) ";
-					sql += " values (" + person_id.toString() + ", " + book_id.toString() + ", 0)";
+					sql += " values (" + person_id.toString() + ", " + book_id.toString() + ", 0) "
+					sql += " on duplicate key update book_id = values(book_id)";
 					console.log(sql);
 			
 					con.query(sql, (err, results, fields) => {
