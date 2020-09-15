@@ -57,7 +57,7 @@ app.get('/books', (req, res) => {
 	con.connect((err) => {
 		if (err) throw err;
 
-		sql = "select * from book order by title asc";
+		sql = "select book.*, book_category.name from book inner join book_category on book.category = book_category.id order by title asc";
 
 		console.log(sql);
 
@@ -86,7 +86,7 @@ app.get('/person/:id', (req, res) => {
 			con.connect((err) => {
 				if (err) throw err;
 
-				sql = "select * from person left outer join person_book on person.id = person_book.person_id ";
+				sql = "select *, person_book.quantity as p_quantity from person left outer join person_book on person.id = person_book.person_id ";
 				sql += " inner join book on book.id = person_book.book_id ";
 				sql += " where person.id = " + myId.toString();
 
