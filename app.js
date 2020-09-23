@@ -71,6 +71,37 @@ app.get('/books', (req, res) => {
 	});
 });
 
+app.get('/books/:categ_id', (req, res) => {
+	const categ_id = "categ_id";
+
+	var mysql = require('mysql');
+
+	var con = mysql.createConnection(connJson);
+
+	if (req.params && categ_id in req.params) {
+		var categId = req.params[categ_id];
+
+		if (categId) {
+			con.connect((err) => {
+				if (err) throw err;
+
+				sql = "select book.*, book_category.name from book inner join book_category on book.category = book_category.id "
+				sql += " where book_category.id = " + categId.toString();
+				sql += " order by title asc ";
+
+				console.log(sql);
+
+				con.query(sql, function (err, results, fields) {
+					if (err) throw err;
+
+					res.send(results);
+				});
+
+				con.end();
+			});
+		}
+	}
+});
 
 app.get('/person/:id', (req, res) => {
 	const id = 'id';
