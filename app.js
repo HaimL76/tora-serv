@@ -103,6 +103,39 @@ app.get('/books/:categ_id', (req, res) => {
 	}
 });
 
+app.delete('/person/:person_id/books/:book_id', (req, res) => {
+	const book_id = 'book_id';
+	const person_id = 'person_id';
+
+	var mysql = require('mysql');
+
+	var con = mysql.createConnection(connJson);
+
+	if (req.params && book_id in req.params && person_id in req.params) {
+		var b_id = req.params[book_id];
+		var p_id = req.params[person_id];
+
+		if (b_id && p_id) {
+			con.connect((err) => {
+				if (err) throw err;
+
+				sql = "delete from person_book where person_id = " + p_id.toString()
+				sql += " and book_id = " + b_id.toString();
+
+				console.log(sql);
+
+				con.query(sql, function (err, results, fields) {
+					if (err) throw err;
+
+					res.send(results);
+				});
+
+				con.end();
+			});
+		}
+	}
+});
+
 app.get('/person/:id', (req, res) => {
 	const id = 'id';
 
