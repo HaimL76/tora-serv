@@ -1,6 +1,7 @@
 var express = require('express');
 var cors = require('cors')
 var app = express();
+var hw = require('./permission');
 
 app.use(cors())
 
@@ -18,9 +19,9 @@ var connJson = {
     database: "Person"
 };
 
-
 app.listen(3000, () => {
     console.log('Example app listening on port 3000!');
+    console.log(hw.helloWorld());
 });
 
 app.get('/', (req, res) => {
@@ -122,7 +123,8 @@ app.get('/person/:person_id/books/:book_id', (req, res) => {
             con.connect((err) => {
                 if (err) throw err;
 
-                sql = "select *, person_book.quantity as p_quantity from person_book inner join book on book.Id = person_book.book_id where person_id = " + p_id.toString()
+                sql = "select *, person_book.quantity as p_quantity person_book.progress_counter as progress_counter from person_book ";
+                sql += " inner join book on book.Id = person_book.book_id where person_id = " + p_id.toString()
                 sql += " and book_id = " + b_id.toString();
 
                 console.log(sql);
