@@ -123,7 +123,7 @@ app.get('/person/:person_id/books/:book_id', (req, res) => {
             con.connect((err) => {
                 if (err) throw err;
 
-                sql = "select *, person_book.quantity as p_quantity person_book.progress_counter as progress_counter from person_book ";
+                sql = "select *, person_book.quantity as p_quantity, person_book.progress_counter as progress_counter from person_book ";
                 sql += " inner join book on book.Id = person_book.book_id where person_id = " + p_id.toString()
                 sql += " and book_id = " + b_id.toString();
 
