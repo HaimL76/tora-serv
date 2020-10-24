@@ -123,8 +123,12 @@ app.get('/person/:person_id/books/:book_id', (req, res) => {
             con.connect((err) => {
                 if (err) throw err;
 
-                sql = "select *, person_book.quantity as p_quantity, person_book.progress_counter as progress_counter from person_book ";
-                sql += " inner join book on book.Id = person_book.book_id where person_id = " + p_id.toString()
+                sql = "select *, person_book.quantity as p_quantity, person_book.progress_counter as progress_counter "
+                    //aql += " max(achievments.number) as max_achievement "
+                sql += " from person_book ";
+                sql += " inner join book on book.Id = person_book.book_id "
+                    //sql += " left outer join achievements on achievements on achievements.person_book = person_book.id "
+                sql += " where person_id = " + p_id.toString()
                 sql += " and book_id = " + b_id.toString();
 
                 console.log(sql);
@@ -234,8 +238,11 @@ app.get('/person/:id', (req, res) => {
             con.connect((err) => {
                 if (err) throw err;
 
-                sql = "select *, person_book.quantity as p_quantity from person left outer join person_book on person.id = person_book.person_id ";
+                sql = "select *, person_book.quantity as p_quantity " //, max(achievements.number) as max_achievement "
+                sql += " from person "
+                sql += " left outer join person_book on person.id = person_book.person_id ";
                 sql += " inner join book on book.id = person_book.book_id ";
+                //sql += " left outer join achievements on achievements on achievements.person_book = person_book.id "
                 sql += " where person.id = " + myId.toString();
 
                 console.log(sql);
