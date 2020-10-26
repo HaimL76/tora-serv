@@ -124,7 +124,7 @@ app.get('/person/:person_id/books/:book_id', (req, res) => {
                 if (err) throw err;
 
                 sql = "select *, person_book.id as p_b_id, person_book.quantity as p_quantity, person_book.progress_counter as progress_counter, "
-                sql += " acheivements0.max_number "
+                sql += " achievements0.max_number "
                     //aql += " max(achievments.number) as max_achievement "
                 sql += " from person_book ";
                 sql += " inner join book on book.Id = person_book.book_id, "
