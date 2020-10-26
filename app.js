@@ -194,7 +194,7 @@ app.post('/person_book/:p_b_id', (req, res) => {
                                     var achieve_val = pbook[achievement_value];
 
                                     if (achieve_val) {
-                                        sql = "select max(number) max_number from achievements where person_book"
+                                        sql = "select max(number) max_number from achievements where person_book = " + person_book.toString();
 
                                         con.query(sql, function(err, results, fields) {
                                             if (err) throw err;
