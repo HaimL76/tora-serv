@@ -186,27 +186,46 @@ app.post('/person_book/:p_b_id', (req, res) => {
                             con.query(sql, function(err, results, fields) {
                                 if (err) throw err;
 
-                                if (achievement_value) {
-                                    sql = "select max(number) max_number from achievements where person_book"
+                                if (achievement_value in pbook) {
+                                    var achieve_val = pbook[achievement_value];
 
-                                    var res = con.query(sql, function(err, results, fields) {
-                                        if (err) throw err;
+                                    if (achieve_val) {
+                                        sql = "select max(number) max_number from achievements where person_book"
 
-                                        if (Array.isArray(results) && results.length > 0) {
-                                            var res0 = results[0];
+                                        con.query(sql, function(err, results, fields) {
+                                            if (err) throw err;
 
-                                            if (res0 && max_number in res0) {
-                                                var maxnum = res0[max_number];
+                                            if (Array.isArray(results) && results.length > 0) {
+                                                var res0 = results[0];
 
-                                                if (maxnum === null)
-                                                    maxnum = 0;
+                                                if (res0 && max_number in res0) {
+                                                    var maxnum = res0[max_number];
 
-                                                maxnum++;
+                                                    if (maxnum === null)
+                                                        maxnum = 0;
+
+                                                    maxnum++;
+
+                                                    sql = "insert into achievements (person_book, number, data) ";
+                                                    sql += " values (" + person_book.toString() + ", " + maxnum.toString() + ", '" + achieve_val + "')";
+
+                                                    con.query(sql, function(err, results, fields) {
+                                                        if (err) throw err;
+
+                                                        res.send(results);
+
+                                                        con.end();
+                                                    });
+                                                } else {
+                                                    con.end;
+                                                }
+                                            } else {
+                                                con.end();
                                             }
-                                        } else {
-                                            con.end();
-                                        }
-                                    });
+                                        });
+                                    } else {
+                                        con.end();
+                                    }
                                 } else {
                                     con.end();
                                 }
