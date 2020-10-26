@@ -123,11 +123,15 @@ app.get('/person/:person_id/books/:book_id', (req, res) => {
             con.connect((err) => {
                 if (err) throw err;
 
-                sql = "select *, person_book.id as p_b_id, person_book.quantity as p_quantity, person_book.progress_counter as progress_counter "
+                sql = "select *, person_book.id as p_b_id, person_book.quantity as p_quantity, person_book.progress_counter as progress_counter, "
+                sql += " acheivements0.max_number "
                     //aql += " max(achievments.number) as max_achievement "
                 sql += " from person_book ";
-                sql += " inner join book on book.Id = person_book.book_id "
+                sql += " inner join book on book.Id = person_book.book_id, "
                     //sql += " left outer join achievements on achievements on achievements.person_book = person_book.id "
+
+                sql += " lateral (select max(number) as max_number from achievements where person_book = person_book.id) achievements0 "
+
                 sql += " where person_id = " + p_id.toString()
                 sql += " and book_id = " + b_id.toString();
 
@@ -302,11 +306,14 @@ app.get('/person/:id', (req, res) => {
             con.connect((err) => {
                 if (err) throw err;
 
-                sql = "select *, person_book.id as p_b_id, person_book.quantity as p_quantity, achievements.number as achievement_number "
+                sql = "select *, person_book.id as p_b_id, person_book.quantity as p_quantity, achievements0.max_number "
                 sql += " from person "
                 sql += " left outer join person_book on person.id = person_book.person_id ";
-                sql += " inner join book on book.id = person_book.book_id ";
-                sql += " left outer join achievements on achievements.person_book = person_book.id "
+                sql += " inner join book on book.id = person_book.book_id, ";
+                //sql += " left outer join achievements on achievements.person_book = person_book.id "
+
+                sql += " lateral (select max(number) as max_number from achievements where person_book = person_book.id) achievements0 "
+
                 sql += " where person.id = " + myId.toString();
 
                 console.log(sql);
