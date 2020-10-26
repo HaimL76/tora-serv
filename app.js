@@ -145,25 +145,28 @@ app.get('/person/:person_id/books/:book_id', (req, res) => {
     }
 });
 
-app.post('/person/:person_id/books/:book_id', (req, res) => {
+app.post('/person_book/:p_b_id', (req, res) => {
     const book_id = 'book_id';
     const person_id = 'person_id';
     const body = 'body';
     const p_quantity = 'p_quantity';
     const p_book = 'p_book';
+    const p_b_id = 'p_b_id';
+    const achievement_value = 'achievement_value';
+    const max_number = 'max_number';
 
     var mysql = require('mysql');
 
     var con = mysql.createConnection(connJson);
 
-    if (req && body in req && req.params && book_id in req.params && person_id in req.params) {
+    if (req && body in req && req.params && p_b_id in req.params) { //} && person_id in req.params) {
         //var b_id = req.params[book_id];
         //var p_id = req.params[person_id];
-        var person_book = req.params[person_book];
+        var person_book = req.params[p_b_id];
 
         var req_body = req[body];
 
-        if (req_body && p_book in req_body && person_book > 0) { //} && b_id && p_id) {
+        if (req_body && person_book > 0) { //} p_book in req_body && person_book > 0) { //} && b_id && p_id) {
             const pbook = req_body[p_book];
 
             if (pbook && p_quantity in pbook) {
@@ -176,27 +179,41 @@ app.post('/person/:person_id/books/:book_id', (req, res) => {
                         con.beginTransaction((err) => {
                             if (err) throw err;
 
-                            sql = "select max(number) from achievements where person_book"
-
-                            var res = con.query(sql, function(err, results, fields) {
-                                if (err) throw err;
-
-                                res.send(results);
-                            });
-
-                            sql = "update person_book set quantity = " + quant.toString() + " where person_id = " + p_id.toString()
-                            sql += " and book_id = " + b_id.toString();
+                            sql = "update person_book set quantity = " + quant.toString() + " where id = " + person_book.toString();
 
                             console.log(sql);
 
                             con.query(sql, function(err, results, fields) {
                                 if (err) throw err;
 
-                                res.send(results);
+                                if (achievement_value) {
+                                    sql = "select max(number) max_number from achievements where person_book"
+
+                                    var res = con.query(sql, function(err, results, fields) {
+                                        if (err) throw err;
+
+                                        if (Array.isArray(results) && results.length > 0) {
+                                            var res0 = results[0];
+
+                                            if (res0 && max_number in res0) {
+                                                var maxnum = res0[max_number];
+
+                                                if (maxnum === null)
+                                                    maxnum = 0;
+
+                                                maxnum++;
+                                            }
+                                        } else {
+                                            con.end();
+                                        }
+                                    });
+                                } else {
+                                    con.end();
+                                }
                             });
                         });
 
-                        con.end();
+                        //con.end();
                     });
                 }
             }
