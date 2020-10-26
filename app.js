@@ -214,19 +214,34 @@ app.post('/person_book/:p_b_id', (req, res) => {
 
                                                         res.send(results);
 
+                                                        con.commit((err) => {
+
+                                                        });
                                                         con.end();
                                                     });
                                                 } else {
+                                                    con.commit((err) => {
+
+                                                    });
                                                     con.end;
                                                 }
                                             } else {
+                                                con.commit((err) => {
+
+                                                });
                                                 con.end();
                                             }
                                         });
                                     } else {
+                                        con.commit((err) => {
+
+                                        });
                                         con.end();
                                     }
                                 } else {
+                                    con.commit((err) => {
+
+                                    });
                                     con.end();
                                 }
                             });
