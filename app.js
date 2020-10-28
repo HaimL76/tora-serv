@@ -130,7 +130,7 @@ app.get('/person/:person_id/books/:book_id', (req, res) => {
                 sql += " inner join book on book.Id = person_book.book_id, "
                     //sql += " left outer join achievements on achievements on achievements.person_book = person_book.id "
 
-                sql += " lateral (select max(number) as max_number from achievements where person_book = person_book.id) achievements0 "
+                sql += " lateral (select count(*) as max_number from achievements where person_book = person_book.id) achievements0 "
 
                 sql += " where person_id = " + p_id.toString()
                 sql += " and book_id = " + b_id.toString();
@@ -194,7 +194,7 @@ app.post('/person_book/:p_b_id', (req, res) => {
                                     var achieve_val = pbook[achievement_value];
 
                                     if (achieve_val) {
-                                        sql = "select max(number) max_number from achievements where person_book = " + person_book.toString();
+                                        sql = "select count(*) as max_number from achievements where person_book = " + person_book.toString();
 
                                         con.query(sql, function(err, results, fields) {
                                             if (err) throw err;
@@ -210,8 +210,8 @@ app.post('/person_book/:p_b_id', (req, res) => {
 
                                                     maxnum++;
 
-                                                    sql = "insert into achievements (person_book, number, data) ";
-                                                    sql += " values (" + person_book.toString() + ", " + maxnum.toString() + ", '" + achieve_val + "')";
+                                                    sql = "insert into achievements (person_book, data) ";
+                                                    sql += " values (" + person_book.toString() + ", '" + achieve_val + "')";
 
                                                     con.query(sql, function(err, results, fields) {
                                                         if (err) throw err;
@@ -312,7 +312,7 @@ app.get('/person/:id', (req, res) => {
                 sql += " inner join book on book.id = person_book.book_id, ";
                 //sql += " left outer join achievements on achievements.person_book = person_book.id "
 
-                sql += " lateral (select max(number) as max_number from achievements where person_book = person_book.id) achievements0 "
+                sql += " lateral (select count(*) as max_number from achievements where person_book = person_book.id) achievements0 "
 
                 sql += " where person.id = " + myId.toString();
 
