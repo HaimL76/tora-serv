@@ -157,7 +157,7 @@ app.post('/person_book/:p_b_id', (req, res) => {
     const p_quantity = 'p_quantity';
     const p_book = 'p_book';
     const p_b_id = 'p_b_id';
-    const achievement_value = 'achievement_value';
+    const achiev_data = 'achieve_data';
     const max_number = 'max_number';
 
     var mysql = require('mysql');
@@ -191,10 +191,10 @@ app.post('/person_book/:p_b_id', (req, res) => {
                             con.query(sql, function(err, results, fields) {
                                 if (err) throw err;
 
-                                if (achievement_value in pbook) {
-                                    var achieve_val = pbook[achievement_value];
+                                if (achiev_data in pbook) {
+                                    var ach_data = pbook[achiev_data];
 
-                                    if (achieve_val) {
+                                    if (ach_data) {
                                         sql = "select count(*) as max_number from achievements where person_book = " + person_book.toString();
 
                                         con.query(sql, function(err, results, fields) {
@@ -212,13 +212,14 @@ app.post('/person_book/:p_b_id', (req, res) => {
                                                     maxnum++;
 
                                                     sql = "insert into achievements (person_book, data) ";
-                                                    sql += " values (" + person_book.toString() + ", '" + achieve_val + "')";
+                                                    sql += " values (" + person_book.toString() + ", '" + achiev_data + "')";
 
                                                     con.query(sql, function(err, results, fields) {
-                                                        if (err)
+                                                        if (err) {
                                                             res.send(false);
-
-                                                        res.send(results);
+                                                        } else {
+                                                            res.send(results);
+                                                        }
 
                                                         con.commit((err) => {
 
@@ -227,6 +228,12 @@ app.post('/person_book/:p_b_id', (req, res) => {
                                                         con.end();
                                                     });
                                                 } else {
+                                                    if (err) {
+                                                        res.send(false);
+                                                    } else {
+                                                        res.send(results);
+                                                    }
+
                                                     con.commit((err) => {
 
                                                     });
@@ -234,6 +241,12 @@ app.post('/person_book/:p_b_id', (req, res) => {
                                                     con.end;
                                                 }
                                             } else {
+                                                if (err) {
+                                                    res.send(false);
+                                                } else {
+                                                    res.send(results);
+                                                }
+
                                                 con.commit((err) => {
 
                                                 });
@@ -242,6 +255,12 @@ app.post('/person_book/:p_b_id', (req, res) => {
                                             }
                                         });
                                     } else {
+                                        if (err) {
+                                            res.send(false);
+                                        } else {
+                                            res.send(results);
+                                        }
+
                                         con.commit((err) => {
 
                                         });
@@ -249,6 +268,12 @@ app.post('/person_book/:p_b_id', (req, res) => {
                                         con.end();
                                     }
                                 } else {
+                                    if (err) {
+                                        res.send(false);
+                                    } else {
+                                        res.send(results);
+                                    }
+
                                     con.commit((err) => {
 
                                     });
