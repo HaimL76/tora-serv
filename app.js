@@ -291,34 +291,51 @@ app.post('/person_book/:p_b_id', (req, res) => {
     }
 });
 
-app.delete('/person/:person_id/books/:book_id', (req, res) => {
+app.delete('/p_b_id/:p_b_id', (req, res) => {
     const book_id = 'book_id';
     const person_id = 'person_id';
+    const p_b_id = 'p_b_id';
 
     var mysql = require('mysql');
 
     var con = mysql.createConnection(connJson);
 
-    if (req.params && book_id in req.params && person_id in req.params) {
-        var b_id = req.params[book_id];
-        var p_id = req.params[person_id];
+    if (req.params && p_b_id in req.params) { //} book_id in req.params && person_id in req.params) {
+        //var b_id = req.params[book_id];
+        //var p_id = req.params[person_id];
+        var pbid = req.params[p_b_id];
 
-        if (b_id && p_id) {
+        if (pbid) { //b_id && p_id) {
             con.connect((err) => {
                 if (err) throw err;
 
-                sql = "delete from person_book where person_id = " + p_id.toString()
-                sql += " and book_id = " + b_id.toString();
-
-                console.log(sql);
-
-                con.query(sql, function(err, results, fields) {
+                con.beginTransaction((err) => {
                     if (err) throw err;
 
-                    res.send(results);
-                });
+                    sql = "delete from achievements where person_book = " + pbid.toString();
+                    console.log(sql);
 
-                con.end();
+                    con.query(sql, function(err, results, fields) {
+                        if (err) throw err;
+
+                        sql = "delete from person_book where id = " + pbid.toString();
+                        console.log(sql);
+
+                        con.query(sql, function(err, results, fields) {
+                            if (err) {
+                                res.send(false);
+                            } else {
+                                res.send(results);
+                            }
+
+                            con.commit((err) => {
+
+                            });
+
+                            con.end();
+                        });
+                    });
+                });
             });
         }
     }
